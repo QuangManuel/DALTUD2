@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "admin-dashboard.html", "use": "@vercel/static" },
+    { "src": "admin-dashboard.js", "use": "@vercel/static" },
+    { "src": "admin-dashboard.css", "use": "@vercel/static" },
+    { "src": "style.css", "use": "@vercel/static" },
+    { "src": "app.js", "use": "@vercel/static" },
+    { "src": "background-music.mp3", "use": "@vercel/static" },
+    { "src": "correct.mp3", "use": "@vercel/static" },
+    { "src": "incorrect.mp3", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)\\.(css|js|png|jpg|jpeg|gif|svg|ico|json|mp3)", "dest": "/$1.$2" },
+    { "src": "/admin", "dest": "/admin-dashboard.html" },
+    { "src": "/admin-dashboard", "dest": "/admin-dashboard.html" },
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

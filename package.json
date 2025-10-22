@@ -1,0 +1,18 @@
+{
+  "name": "quiz-cntt-daltud2",
+  "version": "1.0.0",
+  "description": "Ứng dụng luyện thi trắc nghiệm CNTT",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static build - no build step needed'",
+    "start": "npx serve ."
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
+

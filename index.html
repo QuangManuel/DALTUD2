@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz CNTT - DALTUD2</title>
+    <link rel="stylesheet" href="style.css?v=1729585600">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Quiz CNTT</h1>
+        <nav>
+            <a href="#" onclick="showPage('home')" id="homeNavLink">Trang chủ</a>
+            <a href="#" onclick="showPage('classes')" id="classesLink" style="display:none">Quản lý lớp</a>
+            <a href="#" onclick="showPage('builder')" id="builderLink" style="display:none">Thêm câu hỏi</a>
+            <a href="#" onclick="showPage('settings')" id="settingsNavLink">Cài đặt</a>
+            <a href="#" onclick="showPage('login')" id="loginLink">Đăng nhập</a>
+            <a href="#" onclick="showPage('register')" id="registerLink">Đăng ký</a>
+            
+            <a href="#" onclick="showPage('my-classes')" id="myClassesLink" style="display:none">Lớp của tôi</a>
+            <a href="#" onclick="showPage('profile')" id="profileLink" style="display:none">Thông tin</a>
+            <a href="#" onclick="logout()" id="logoutLink" style="display:none">Đăng xuất</a>
+            
+            <!-- User Dropdown Menu -->
+            <div id="userDropdown" class="user-dropdown">
+                <div class="user-info-display" onclick="toggleUserMenu()">
+                    <span id="userAvatar" class="user-avatar">🐱</span>
+                    <span id="userDisplayName" class="user-name">User</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div id="userMenu" class="user-menu">
+                    <a href="#" onclick="showPage('profile')" class="menu-item">
+                        <i class="fas fa-user"></i> Thông tin cá nhân
+                    </a>
+                    <a href="#" onclick="showPage('settings')" class="menu-item">
+                        <i class="fas fa-cog"></i> Cài đặt
+                    </a>
+                    <a href="#" onclick="logout()" class="menu-item">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Home Page -->
+        <div id="home-page" class="page">
+            <div class="home-container">
+                <!-- Stats Section for Teachers -->
+                <div id="teacherStats" class="stats-section" style="display:none">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chalkboard"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="teacherTotalClasses">0</h3>
+                                <p>Tổng số lớp</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="teacherTotalStudents">0</h3>
+                                <p>Tổng học sinh</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="teacherTotalQuestions">0</h3>
+                                <p>Tổng câu hỏi</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="teacherTotalQuizzes">0</h3>
+                                <p>Tổng bài quiz</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Information for Students -->
+                <div id="classInfo" class="class-info-section" style="display:none">
+                    <div class="class-info-header">
+                        <h2><i class="fas fa-book"></i> Lớp của bạn</h2>
+                        <p>Thông tin lớp học bạn đang tham gia</p>
+                    </div>
+                    <div id="classDetails" class="class-details">
+                        <p id="classStatus">Đang tải thông tin lớp...</p>
+                    </div>
+                </div>
+
+                <!-- Welcome Page for Non-logged Users -->
+                <div class="welcome-page" id="welcomePage">
+                    <div class="welcome-card">
+                        <div class="welcome-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h2>Chào mừng đến với Quiz CNTT</h2>
+                        <p>Hệ thống quiz trực tuyến dành cho sinh viên Công nghệ Thông tin</p>
+                        <div class="welcome-actions">
+                            <button onclick="showPage('login')" class="btn-primary btn-large">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Đăng nhập
+                            </button>
+                            <button onclick="showPage('register')" class="btn-secondary btn-large">
+                                <i class="fas fa-user-plus"></i>
+                                Đăng ký
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Active Page -->
+        <div id="quiz-active-page" class="page" style="display:none">
+            <!-- Audio Elements -->
+            <audio id="backgroundMusic" loop>
+                <source src="background-music.mp3" type="audio/mpeg">
+            </audio>
+            <audio id="correctSound">
+                <source src="correct.mp3" type="audio/mpeg">
+            </audio>
+            <audio id="incorrectSound">
+                <source src="incorrect.mp3" type="audio/mpeg">
+            </audio>
+            
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <div class="quiz-timer">
+                        <div class="timer-item">
+                            <span class="timer-label">Tổng thời gian:</span>
+                            <span id="totalTimer" class="timer-value">30:00</span>
+                        </div>
+                        <div class="timer-item">
+                            <span class="timer-label">Câu hiện tại:</span>
+                            <span id="questionTimer" class="timer-value">2:00</span>
+                        </div>
+                    </div>
+                    <div class="quiz-progress">
+                        <span id="questionProgress">Câu 1/10</span>
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="quiz-settings">
+                        <button id="audioSettingsBtn" class="settings-btn" onclick="toggleAudioSettings()" title="Cài đặt âm thanh">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="quiz-content">
+                    <div class="question-card">
+                        <div class="question-header">
+                            <h3 id="questionText">Câu hỏi sẽ hiển thị ở đây...</h3>
+                        </div>
+                        
+                        <div class="question-options" id="questionOptions">
+                            <!-- Options will be loaded here -->
+                        </div>
+                        
+                        <div class="question-actions">
+                            <button id="nextQuestionBtn" class="btn-primary" onclick="nextQuestion()" disabled>
+                                <i class="fas fa-arrow-right"></i> Tiếp theo
+                            </button>
+                            <button id="submitQuizBtn" class="btn-success" onclick="finishQuiz()" style="display:none">
+                                <i class="fas fa-check"></i> Nộp bài
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waiting Room Page -->
+        <div id="waiting-room-page" class="page" style="display:none">
+            <div class="waiting-room-container">
+                <div class="waiting-header">
+                    <h2 id="waitingClassName">Phòng chờ - [Class Name]</h2>
+                    <div class="waiting-status" id="waitingStatus">Đang chờ giáo viên...</div>
+                </div>
+                
+                <div class="participants-section">
+                    <div class="participants-header">
+                        <h3><i class="fas fa-users"></i> Danh sách tham gia (<span id="participantCount">0</span>)</h3>
+                        <button onclick="leaveWaitingRoom()" class="btn-secondary btn-leave">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Rời khỏi lớp
+                        </button>
+                    </div>
+                    <div class="participants-list" id="participantsList">
+                        <!-- Participants will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="quiz-info-section" id="quizInfoSection" style="display:none">
+                    <h3><i class="fas fa-clipboard-list"></i> Thông tin bộ đề</h3>
+                    <div class="quiz-info-card">
+                        <div class="quiz-info-content">
+                            <h4 id="quizSetDisplayName">Tên bộ đề</h4>
+                            <p id="quizSetDisplayDescription">Mô tả bộ đề</p>
+                            <div class="quiz-stats">
+                                <span><i class="fas fa-question-circle"></i> <span id="questionCount">0</span> câu hỏi</span>
+                                <span><i class="fas fa-clock"></i> <span id="timeLimit">0</span> phút</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Join Class Modal -->
+        <div id="joinClassModal" class="modal" style="display:none">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeJoinClassModal()">&times;</span>
+                <h2>Tham gia lớp học</h2>
+                <div class="form-group">
+                    <label for="classCodeInput">Nhập mã lớp:</label>
+                    <input type="text" id="classCodeInput" placeholder="Mã lớp" required>
+                </div>
+                <button class="btn-primary" onclick="handleJoinClass()">Tham gia</button>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login-page" class="page" style="display:none">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h2><i class="fas fa-sign-in-alt"></i> Đăng nhập</h2>
+                    </div>
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="loginEmail">Email:</label>
+                            <input type="email" id="loginEmail" placeholder="Nhập email của bạn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Mật khẩu:</label>
+                            <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" required>
+                        </div>
+                        <button type="submit" class="btn-primary btn-full">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Đăng nhập
+                        </button>
+                    </form>
+                    <div class="auth-footer">
+                        <p>Chưa có tài khoản? <a href="#" onclick="showPage('register')">Đăng ký ngay</a></p>
+                    </div>
+                    <div id="loginError" class="error" style="display:none"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Register Page -->
+        <div id="register-page" class="page" style="display:none">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h2><i class="fas fa-user-plus"></i> Đăng ký</h2>
+                    </div>
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="registerEmail">Email:</label>
+                            <input type="email" id="registerEmail" placeholder="Nhập email của bạn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Mật khẩu:</label>
+                            <input type="password" id="registerPassword" placeholder="Tạo mật khẩu mạnh" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerUsername">Tên người dùng:</label>
+                            <input type="text" id="registerUsername" placeholder="Tên đăng nhập" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerFullName">Họ tên:</label>
+                            <input type="text" id="registerFullName" placeholder="Nhập họ tên đầy đủ" required>
+                        </div>
+                        <input type="hidden" id="registerRole" value="student">
+                        <button type="submit" class="btn-primary btn-full">
+                            <i class="fas fa-user-plus"></i>
+                            Đăng ký
+                        </button>
+                    </form>
+                    <div class="auth-footer">
+                        <p>Đã có tài khoản? <a href="#" onclick="showPage('login')">Đăng nhập ngay</a></p>
+                    </div>
+                    <div id="registerError" class="error" style="display:none"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Settings Page -->
+        <div id="settings-page" class="page" style="display:none">
+            <div class="settings-container">
+                <div class="settings-header">
+                    <h2><i class="fas fa-cog"></i> Cài đặt</h2>
+                    <p>Tùy chỉnh trải nghiệm học tập của bạn</p>
+                </div>
+                <div class="settings-content">
+                    <form id="settingsForm" class="settings-form">
+                        <div class="settings-section">
+                            <h3><i class="fas fa-volume-up"></i> Âm thanh</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <label for="musicEnabled">Nhạc nền</label>
+                                    <p>Phát nhạc nền trong khi làm quiz</p>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="switch">
+                                        <input type="checkbox" id="musicEnabled">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <label for="soundEnabled">Âm thanh</label>
+                                    <p>Phát âm thanh thông báo và hiệu ứng</p>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="switch">
+                                        <input type="checkbox" id="soundEnabled">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-actions">
+                            <button type="submit" class="btn-primary btn-full">
+                                <i class="fas fa-save"></i>
+                                Lưu cài đặt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Page -->
+        <div id="quiz-page" class="page" style="display:none">
+            <div class="card">
+                <div id="quiz-content">
+                    <h2>Đang tải câu hỏi...</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Builder Page -->
+        <div id="builder-page" class="page" style="display:none">
+            <div class="builder-container">
+                <div class="builder-header">
+                    <h2><i class="fas fa-plus-circle"></i> Quản lý câu hỏi</h2>
+                    <p>Tạo và quản lý câu hỏi cho bài quiz của bạn</p>
+                </div>
+                <div class="builder-content">
+                    <div class="tabs">
+                        <button class="tab-button active" onclick="switchBuilderTab('create')">Tạo câu hỏi mới</button>
+                        <button class="tab-button" onclick="switchBuilderTab('manage')">Danh sách câu hỏi</button>
+                    </div>
+                    
+                    <!-- Create Question Tab -->
+                    <div id="createQuestionTab" class="tab-content active">
+                        <form id="questionForm" class="builder-form">
+                            <div class="form-group">
+                                <label>Loại câu hỏi:</label>
+                                <select id="questionType" onchange="toggleQuestionType()">
+                                    <option value="tf">Đúng/Sai</option>
+                                    <option value="mcq">4 lựa chọn</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Nội dung câu hỏi:</label>
+                                <textarea id="questionText" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Chủ đề:</label>
+                                <input type="text" id="questionCategory" placeholder="Ví dụ: Web, Database, Network">
+                            </div>
+                            
+                            <!-- True/False options -->
+                            <div id="tf-options" class="form-group">
+                                <label>Đáp án:</label>
+                                <select id="tfAnswer">
+                                    <option value="true">Đúng</option>
+                                    <option value="false">Sai</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Multiple choice options -->
+                            <div id="mcq-options" class="form-group" style="display:none">
+                                <label>Lựa chọn A:</label>
+                                <input type="text" id="optionA" placeholder="Lựa chọn A">
+                                <label>Lựa chọn B:</label>
+                                <input type="text" id="optionB" placeholder="Lựa chọn B">
+                                <label>Lựa chọn C:</label>
+                                <input type="text" id="optionC" placeholder="Lựa chọn C">
+                                <label>Lựa chọn D:</label>
+                                <input type="text" id="optionD" placeholder="Lựa chọn D">
+                                <label>Đáp án đúng:</label>
+                                <select id="correctAnswer">
+                                    <option value="0">A</option>
+                                    <option value="1">B</option>
+                                    <option value="2">C</option>
+                                    <option value="3">D</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary btn-full">
+                                    <i class="fas fa-plus"></i>
+                                    Thêm câu hỏi
+                                </button>
+                            </div>
+                        </form>
+                        <div id="questionError" class="error" style="display:none"></div>
+                    </div>
+                    
+                    <!-- Manage Questions Tab -->
+                    <div id="manageQuestionsTab" class="tab-content">
+                        <div class="manage-questions-header">
+                            <div class="search-section">
+                                <input type="text" id="builderQuestionSearch" placeholder="Tìm kiếm câu hỏi..." onkeyup="filterBuilderQuestions()">
+                                <select id="builderQuestionCategory" onchange="filterBuilderQuestions()">
+                                    <option value="">Tất cả chủ đề</option>
+                                </select>
+                            </div>
+                            <button class="btn-primary" onclick="refreshBuilderQuestions()">
+                                <i class="fas fa-sync-alt"></i>
+                                Làm mới
+                            </button>
+                        </div>
+                        
+                        <div class="manage-questions-list" id="builderQuestionsList">
+                            <!-- Questions will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile-page" class="page" style="display:none">
+            <div class="card">
+                <h2>Thông tin cá nhân</h2>
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label>Ảnh đại diện:</label>
+                        <div class="avatar-section">
+                            <div class="current-avatar">
+                                <img id="currentAvatarDisplay" class="avatar-preview" src="" alt="Avatar" style="display:none;">
+                                <span id="currentAvatarEmoji" class="avatar-preview">🐱</span>
+                            </div>
+                            <div class="avatar-upload">
+                                <input type="file" id="avatarUpload" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+                                <button type="button" class="btn-secondary" onclick="document.getElementById('avatarUpload').click()">
+                                    <i class="fas fa-upload"></i> Tải ảnh lên
+                                </button>
+                                <button type="button" class="btn-secondary" onclick="clearAvatar()">
+                                    <i class="fas fa-times"></i> Xóa ảnh
+                                </button>
+                            </div>
+                            <div class="avatar-options">
+                                <p>Hoặc chọn emoji:</p>
+                                <button type="button" class="avatar-btn" onclick="selectAvatar('🐱')">🐱</button>
+                                <button type="button" class="avatar-btn" onclick="selectAvatar('🐶')">🐶</button>
+                                <button type="button" class="avatar-btn" onclick="selectAvatar('🐰')">🐰</button>
+                                <button type="button" class="avatar-btn" onclick="selectAvatar('🐸')">🐸</button>
+                                <button type="button" class="avatar-btn" onclick="selectAvatar('🐯')">🐯</button>
+                                <button type="button" class="avatar-btn" onclick="selectAvatar('🐨')">🐨</button>
+                                <button type="button" class="avatar-btn" onclick="selectAvatar('🦊')">🦊</button>
+                                <button type="button" class="avatar-btn" onclick="selectAvatar('🐻')">🐻</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên người dùng:</label>
+                        <input type="text" id="profileUsername" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Họ tên:</label>
+                        <input type="text" id="profileFullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="profileEmail" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Vai trò:</label>
+                        <input type="text" id="profileRole" disabled>
+                    </div>
+                    <button type="submit" class="btn-primary">Cập nhật</button>
+                </form>
+                <div id="profileError" class="error" style="display:none"></div>
+            </div>
+        </div>
+
+        <!-- Classes Management Page (Teacher) -->
+        <div id="classes-page" class="page" style="display:none">
+            <div class="classes-container">
+                <!-- Header Section -->
+                <div class="classes-header">
+                    <div class="classes-title-section">
+                        <h2><i class="fas fa-chalkboard-teacher"></i> Quản lý lớp học</h2>
+                        <p>Tạo và quản lý các lớp học của bạn</p>
+                    </div>
+                    <button onclick="showCreateClassModal()" class="btn-create-class">
+                        <i class="fas fa-plus"></i>
+                        Tạo lớp mới
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="classes-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chalkboard"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalClasses">0</h3>
+                            <p>Tổng số lớp</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalStudents">0</h3>
+                            <p>Tổng học sinh</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalQuestions">0</h3>
+                            <p>Tổng câu hỏi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Classes List -->
+                <div class="classes-content">
+                    <div class="classes-list-header">
+                        <h3>Danh sách lớp học</h3>
+                        <div class="classes-actions">
+                            <button onclick="refreshClasses()" class="btn-refresh">
+                                <i class="fas fa-sync-alt"></i>
+                                Làm mới
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="classesList" class="classes-list">
+                        <!-- Classes will be loaded here -->
+                        <div class="empty-state">
+                            <i class="fas fa-chalkboard"></i>
+                            <h3>Chưa có lớp học nào</h3>
+                            <p>Hãy tạo lớp học đầu tiên của bạn</p>
+                            <button onclick="showCreateClassModal()" class="btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Tạo lớp mới
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Join Class Page (Student) -->
+        <div id="join-class-page" class="page" style="display:none">
+            <div class="card">
+                <h2>Tham gia lớp học</h2>
+                <form id="joinClassForm">
+                    <div class="form-group">
+                        <label>Mã lớp học:</label>
+                        <input type="text" id="classCode" placeholder="Nhập mã lớp 6 ký tự" maxlength="6" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Tham gia lớp</button>
+                </form>
+                <div id="joinClassError" class="error" style="display:none"></div>
+            </div>
+        </div>
+
+        <!-- My Classes Page (Student) -->
+        <div id="my-classes-page" class="page" style="display:none">
+            <div class="card">
+                <h2>Lớp học của tôi</h2>
+                <div id="myClassesList" class="classes-list">
+                    <!-- Student's classes will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Detail Page -->
+        <div id="class-detail-page" class="page" style="display:none">
+            <div class="card">
+                <h2 id="classDetailTitle">Chi tiết lớp học</h2>
+                <div id="classInfo">
+                    <!-- Class info will be loaded here -->
+                </div>
+                <div id="quizSetsList" class="quiz-sets-list">
+                    <!-- Quiz sets will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Set Builder Page (Teacher) -->
+        <div id="quiz-sets-page" class="page" style="display:none">
+            <div class="card">
+                <h2>Tạo bộ đề thi</h2>
+                <form id="quizSetForm">
+                    <div class="form-group">
+                        <label>Chọn lớp:</label>
+                        <select id="quizSetClass" required>
+                            <option value="">-- Chọn lớp --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên bộ đề:</label>
+                        <input type="text" id="quizSetTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả:</label>
+                        <textarea id="quizSetDescriptionOld"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Chọn câu hỏi:</label>
+                        <div id="questionsChecklist" class="questions-checklist">
+                            <!-- Questions will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="quizSetActive"> Kích hoạt bộ đề (hiển thị cho học sinh)
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary">Tạo bộ đề</button>
+                </form>
+                <div id="quizSetError" class="error" style="display:none"></div>
+            </div>
+        </div>
+
+        <!-- Waiting Room Page -->
+        <div id="waiting-room-page" class="page" style="display:none">
+            <div class="card">
+                <h2>Phòng chờ</h2>
+                <div id="waitingRoomContent">
+                    <div class="waiting-info">
+                        <p>Đang chờ giáo viên bắt đầu bài thi...</p>
+                        <div id="participantsList" class="participants-list">
+                            <!-- Participants will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Session Control Page (Teacher) -->
+        <div id="session-control-page" class="page" style="display:none">
+            <div class="card">
+                <h2>Điều khiển phiên thi</h2>
+                <div id="sessionInfo">
+                    <!-- Session info will be loaded here -->
+                </div>
+                <div id="participantsControl" class="participants-control">
+                    <!-- Participants control will be loaded here -->
+                </div>
+                <div id="sessionActions">
+                    <button id="startSessionBtn" onclick="startQuizSession()" class="btn-primary" disabled>Bắt đầu bài thi</button>
+                    <button id="endSessionBtn" onclick="endQuizSession()" class="btn-secondary" style="display:none">Kết thúc phiên</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Quiz Page -->
+        <div id="live-quiz-page" class="page" style="display:none">
+            <div class="card">
+                <div id="liveQuizContent">
+                    <!-- Live quiz content will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div id="results-page" class="page" style="display:none">
+            <div class="card">
+                <h2>Kết quả bài thi</h2>
+                <div id="resultsContent">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Share Class Code Modal -->
+    <div id="shareClassModal" class="modal" style="display:none">
+        <div class="modal-content share-code-modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <h2>Chia sẻ mã lớp</h2>
+                <span class="modal-close" onclick="closeShareClassModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="share-code-content">
+                    <div class="code-section">
+                        <label class="code-label">
+                            <i class="fas fa-key"></i>
+                            Mã lớp học
+                        </label>
+                        <div class="code-display">
+                            <div class="code-value">
+                                <span id="shareClassCode"></span>
+                            </div>
+                            <button onclick="copyClassCode()" class="btn-copy">
+                                <i class="fas fa-copy"></i>
+                                Sao chép
+                            </button>
+                        </div>
+                    </div>
+                    <div class="instruction-section">
+                        <div class="instruction-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <p class="instruction-text">
+                            Chia sẻ mã này cho học sinh để họ có thể tham gia lớp học của bạn
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Class Modal -->
+    <div id="editClassModal" class="modal" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <h2>Chỉnh sửa lớp học</h2>
+                <span class="modal-close" onclick="closeEditClassModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editClassForm" class="modal-form">
+                    <input type="hidden" id="editClassId">
+                    <div class="form-group">
+                        <label for="editClassName">
+                            <i class="fas fa-chalkboard"></i>
+                            Tên lớp học
+                        </label>
+                        <input type="text" id="editClassName" placeholder="Ví dụ: Lớp CNTT K15A" required>
+                        <small class="form-hint">Tên lớp sẽ hiển thị cho học sinh</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="editClassDescription">
+                            <i class="fas fa-info-circle"></i>
+                            Mô tả lớp học
+                        </label>
+                        <textarea id="editClassDescription" placeholder="Mô tả về môn học, nội dung, yêu cầu..."></textarea>
+                        <small class="form-hint">Mô tả giúp học sinh hiểu rõ về lớp học</small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeEditClassModal()">
+                            <i class="fas fa-times"></i>
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Settings Modal -->
+    <div id="classSettingsModal" class="modal large-modal" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <h2>Cài đặt lớp học</h2>
+                <span class="modal-close" onclick="closeClassSettingsModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="class-settings-content">
+                    <!-- Class Info Section -->
+                    <div class="settings-section">
+                        <h3><i class="fas fa-info-circle"></i> Thông tin lớp học</h3>
+                        <div class="class-info-display">
+                            <div class="info-item">
+                                <span class="info-label">Tên lớp:</span>
+                                <span id="settingsClassName" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Mã lớp:</span>
+                                <span id="settingsClassCode" class="info-value code"></span>
+                                <button onclick="copyClassCodeFromSettings()" class="btn-copy-small">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Số học sinh:</span>
+                                <span id="settingsStudentCount" class="info-value"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Students List Section -->
+                    <div class="settings-section">
+                        <h3><i class="fas fa-users"></i> Danh sách học sinh</h3>
+                        <div class="students-list-container">
+                            <div id="studentsList" class="students-list">
+                                <!-- Students will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Quiz Sets Management Section -->
+                    <div class="settings-section quiz-sets-section">
+                        <div class="quiz-sets-header modern-header">
+                            <div class="header-content">
+                                <div class="header-icon">
+                                    <i class="fas fa-clipboard-list"></i>
+                                </div>
+                                <div class="header-text">
+                                    <h3>Quản lý bộ đề</h3>
+                                    <p>Quản lý và tổ chức các bộ đề kiểm tra</p>
+                                </div>
+                            </div>
+                            <button class="btn-create-quizset modern-btn" onclick="showCreateQuizSetModal(window.currentClassId)">
+                                <i class="fas fa-plus"></i>
+                                <span>Tạo bộ đề mới</span>
+                            </button>
+                        </div>
+                        <div class="quiz-sets-grid" id="classSettingsQuizSetsList">
+                            <!-- Quiz sets will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Quiz Selection Section -->
+                    <div class="settings-section quiz-selection-section">
+                        <div class="quiz-selection-form">
+                            <div class="quiz-dropdown-section">
+                                <label for="selectedQuizSet" class="quiz-dropdown-label">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    Chọn bộ đề
+                                </label>
+                                <select id="selectedQuizSet" onchange="onQuizSetSelected()" class="quiz-dropdown">
+                                    <option value="">-- Chọn bộ đề --</option>
+                                </select>
+                            </div>
+                            
+                            <div id="quizSetInfo" class="quiz-info-section" style="display:none">
+                                <div class="quiz-info-cards">
+                                    <div class="quiz-info-card">
+                                        <div class="quiz-info-icon">
+                                            <i class="fas fa-question-circle"></i>
+                                        </div>
+                                        <div class="quiz-info-details">
+                                            <span class="quiz-info-label">Câu hỏi</span>
+                                            <span id="selectedQuestionCount" class="quiz-info-value">0</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="quiz-info-card">
+                                        <div class="quiz-info-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="quiz-info-details">
+                                            <span class="quiz-info-label">Thời gian tổng</span>
+                                            <div class="quiz-time-input">
+                                                <input type="number" id="totalTimeMinutes" min="1" max="120" value="30" class="time-input">
+                                                <span class="time-unit">phút</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="quiz-info-card">
+                                        <div class="quiz-info-icon">
+                                            <i class="fas fa-stopwatch"></i>
+                                        </div>
+                                        <div class="quiz-info-details">
+                                            <span class="quiz-info-label">Thời gian mỗi câu</span>
+                                            <div class="quiz-time-input">
+                                                <input type="number" id="timePerQuestionSeconds" min="10" max="600" value="120" class="time-input">
+                                                <span class="time-unit">giây</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="quiz-action-section">
+                                <button id="startQuizBtn" class="quiz-start-btn" onclick="startQuizWithSet()" disabled>
+                                    <i class="fas fa-play"></i>
+                                    <span>Bắt đầu làm bài</span>
+                                </button>
+                                <button id="stopQuizBtn" class="quiz-stop-btn" onclick="stopQuiz()" style="display:none">
+                                    <i class="fas fa-stop"></i>
+                                    <span>Dừng bài thi</span>
+                                </button>
+                            </div>
+                            
+                            <div id="quizStatus" class="quiz-status-section">
+                                <div class="quiz-status-content">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span id="quizStatusText">Chưa có bài thi nào</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeClassSettingsModal()">
+                            <i class="fas fa-times"></i>
+                            Đóng
+                        </button>
+                        <button type="button" class="btn-primary" onclick="saveClassSettings()">
+                            <i class="fas fa-save"></i>
+                            Lưu cài đặt
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Class Modal -->
+    <div id="createClassModal" class="modal" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-chalkboard-teacher"></i> Tạo lớp học mới</h3>
+                <button id="closeCreateClassModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Tạo lớp học mới để quản lý học sinh và bộ đề quiz</p>
+                <form id="createClassForm" class="modal-form">
+                    <div class="form-group">
+                        <label for="className">
+                            <i class="fas fa-tag"></i>
+                            Tên lớp học
+                        </label>
+                        <input type="text" id="className" placeholder="Ví dụ: Lớp CNTT K15A" required>
+                        <small class="form-hint">Tên lớp sẽ hiển thị cho học sinh</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="classDescription">
+                            <i class="fas fa-info-circle"></i>
+                            Mô tả lớp học
+                        </label>
+                        <textarea id="classDescription" placeholder="Mô tả về môn học, nội dung, yêu cầu..."></textarea>
+                        <small class="form-hint">Mô tả giúp học sinh hiểu rõ về lớp học</small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeCreateClassModal()">
+                            <i class="fas fa-times"></i>
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Tạo lớp học
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Quiz Set Modal -->
+    <div id="createQuizSetModal" class="modal" style="display:none">
+        <div class="modal-content modern-modal">
+            <div class="modal-header modern-header">
+                <div class="header-content">
+                    <div class="header-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div class="header-text">
+                        <h3>Tạo bộ đề mới</h3>
+                        <p>Tạo bộ đề quiz để học sinh làm bài kiểm tra</p>
+                    </div>
+                </div>
+                <button id="closeCreateQuizSetModal" class="modal-close modern-close">&times;</button>
+            </div>
+            <div class="modal-body modern-body">
+                <form id="createQuizSetForm" class="modern-form">
+                    <input type="hidden" id="quizSetClassId">
+                    
+                    <!-- Basic Info Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <i class="fas fa-info-circle"></i>
+                            <h4>Thông tin cơ bản</h4>
+                        </div>
+                        <div class="info-cards">
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <div class="info-icon">
+                                        <i class="fas fa-tag"></i>
+                                    </div>
+                                    <div class="info-title">
+                                        <h5>Tên bộ đề</h5>
+                                        <p>Tên bộ đề sẽ hiển thị cho học sinh</p>
+                                    </div>
+                                </div>
+                                <div class="info-card-content">
+                                    <input type="text" id="quizSetName" class="modern-input" placeholder="Ví dụ: Kiểm tra giữa kỳ - Chương 1" required>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <div class="info-icon">
+                                        <i class="fas fa-align-left"></i>
+                                    </div>
+                                    <div class="info-title">
+                                        <h5>Mô tả bộ đề</h5>
+                                        <p>Mô tả giúp học sinh hiểu rõ về bộ đề</p>
+                                    </div>
+                                </div>
+                                <div class="info-card-content">
+                                    <textarea id="quizSetDescription" class="modern-textarea" placeholder="Mô tả về nội dung, thời gian, yêu cầu..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question Mode Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <i class="fas fa-cogs"></i>
+                            <h4>Chế độ câu hỏi</h4>
+                        </div>
+                        <div class="mode-selector">
+                            <div class="mode-option" data-mode="manual">
+                                <input type="radio" name="questionMode" value="manual" id="modeManual" checked onchange="toggleQuestionMode()">
+                                <label for="modeManual" class="mode-card">
+                                    <div class="mode-icon">
+                                        <i class="fas fa-hand-pointer"></i>
+                                    </div>
+                                    <div class="mode-content">
+                                        <h5>Chọn thủ công</h5>
+                                        <p>Tự chọn câu hỏi cụ thể cho bộ đề</p>
+                                        <div class="mode-badge">Linh hoạt</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="mode-option" data-mode="random">
+                                <input type="radio" name="questionMode" value="random" id="modeRandom" onchange="toggleQuestionMode()">
+                                <label for="modeRandom" class="mode-card">
+                                    <div class="mode-icon">
+                                        <i class="fas fa-dice"></i>
+                                    </div>
+                                    <div class="mode-content">
+                                        <h5>Chọn ngẫu nhiên</h5>
+                                        <p>Tự động chọn câu hỏi ngẫu nhiên từ danh sách</p>
+                                        <div class="mode-badge">Nhanh chóng</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Random Settings Section -->
+                    <div id="randomSettings" class="form-section" style="display:none">
+                        <div class="section-header">
+                            <i class="fas fa-sliders-h"></i>
+                            <h4>Cài đặt ngẫu nhiên</h4>
+                        </div>
+                        <div class="settings-cards">
+                            <div class="settings-card">
+                                <div class="settings-card-header">
+                                    <div class="settings-icon">
+                                        <i class="fas fa-hashtag"></i>
+                                    </div>
+                                    <div class="settings-title">
+                                        <h5>Số câu hỏi</h5>
+                                        <p>Số câu hỏi sẽ được chọn ngẫu nhiên từ tất cả câu hỏi có sẵn</p>
+                                    </div>
+                                </div>
+                                <div class="settings-card-content">
+                                    <div class="input-with-button">
+                                        <input type="number" id="randomQuestionCount" class="modern-input" min="1" max="50" value="10" placeholder="Nhập số câu hỏi">
+                                        <button type="button" class="input-btn" onclick="updateRandomCount()">
+                                            <i class="fas fa-sync"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="form-actions modern-actions">
+                        <button type="button" class="btn-modern btn-cancel" onclick="closeCreateQuizSetModal()">
+                            <i class="fas fa-times"></i>
+                            <span>Hủy</span>
+                        </button>
+                        <button type="submit" class="btn-modern btn-primary">
+                            <i class="fas fa-plus"></i>
+                            <span>Tạo bộ đề</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Questions to Quiz Set Modal -->
+    <div id="addQuestionsModal" class="modal" style="display:none">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-question-circle"></i> Thêm câu hỏi vào bộ đề</h3>
+                <button id="closeAddQuestionsModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('existing')">Câu hỏi có sẵn</button>
+                    <button class="tab-button" onclick="switchTab('random')">Chọn ngẫu nhiên</button>
+                </div>
+                
+                <!-- Existing Questions Tab -->
+                <div id="existingQuestionsTab" class="tab-content active">
+                    <div class="search-section">
+                        <input type="text" id="questionSearch" placeholder="Tìm kiếm câu hỏi..." onkeyup="filterQuestions()">
+                        <select id="categoryFilter" onchange="filterQuestions()">
+                            <option value="">Tất cả chủ đề</option>
+                        </select>
+                    </div>
+                    <div id="questionsList" class="questions-list">
+                        <!-- Questions will be loaded here -->
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeAddQuestionsModal()">Hủy</button>
+                        <button type="button" class="btn-primary" onclick="addSelectedQuestions()">
+                            <i class="fas fa-plus"></i> Thêm câu hỏi đã chọn
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Random Questions Tab -->
+                <div id="randomQuestionsTab" class="tab-content">
+                    <div class="random-settings">
+                        <div class="form-group">
+                            <label for="randomCount">
+                                <i class="fas fa-dice"></i>
+                                Số câu hỏi ngẫu nhiên
+                            </label>
+                            <input type="number" id="randomCount" min="1" max="50" value="5" placeholder="Nhập số câu hỏi">
+                            <small class="form-hint">Số câu hỏi sẽ được chọn ngẫu nhiên từ tất cả câu hỏi có sẵn</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="randomCategory">
+                                <i class="fas fa-filter"></i>
+                                Lọc theo chủ đề (tùy chọn)
+                            </label>
+                            <select id="randomCategory">
+                                <option value="">Tất cả chủ đề</option>
+                            </select>
+                            <small class="form-hint">Để trống để chọn từ tất cả câu hỏi</small>
+                        </div>
+                        
+                        <div class="random-preview" id="randomPreview" style="display:none">
+                            <h4><i class="fas fa-eye"></i> Xem trước câu hỏi sẽ được chọn:</h4>
+                            <div id="previewQuestions" class="preview-questions">
+                                <!-- Preview questions will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeAddQuestionsModal()">Hủy</button>
+                        <button type="button" class="btn-secondary" onclick="previewRandomQuestions()">
+                            <i class="fas fa-eye"></i> Xem trước
+                        </button>
+                        <button type="button" class="btn-primary" onclick="addRandomQuestions()">
+                            <i class="fas fa-dice"></i> Thêm câu hỏi ngẫu nhiên
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Settings Modal -->
+    <div id="audioSettingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-volume-up"></i> Cài đặt âm thanh</h3>
+                <button class="modal-close" onclick="closeAudioSettings()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="audio-settings">
+                    <div class="audio-setting-item">
+                        <div class="setting-info">
+                            <h4><i class="fas fa-music"></i> Nhạc nền</h4>
+                            <p>Nhạc nền khi làm bài thi</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="backgroundMusicToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="audio-setting-item">
+                        <div class="setting-info">
+                            <h4><i class="fas fa-check-circle"></i> Âm thanh đúng</h4>
+                            <p>Âm thanh khi chọn đáp án đúng</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="correctSoundToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="audio-setting-item">
+                        <div class="setting-info">
+                            <h4><i class="fas fa-times-circle"></i> Âm thanh sai</h4>
+                            <p>Âm thanh khi chọn đáp án sai</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="incorrectSoundToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-primary" onclick="closeAudioSettings()">
+                    <i class="fas fa-check"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 DALTUD2 - Ứng dụng Quiz CNTT</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>

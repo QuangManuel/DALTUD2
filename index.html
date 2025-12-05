@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css?v=1729585600">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Header -->
     <header>
@@ -18,11 +20,11 @@
             <a href="#" onclick="showPage('settings')" id="settingsNavLink">Cài đặt</a>
             <a href="#" onclick="showPage('login')" id="loginLink">Đăng nhập</a>
             <a href="#" onclick="showPage('register')" id="registerLink">Đăng ký</a>
-            
+
             <a href="#" onclick="showPage('my-classes')" id="myClassesLink" style="display:none">Lớp của tôi</a>
             <a href="#" onclick="showPage('profile')" id="profileLink" style="display:none">Thông tin</a>
             <a href="#" onclick="logout()" id="logoutLink" style="display:none">Đăng xuất</a>
-            
+
             <!-- User Dropdown Menu -->
             <div id="userDropdown" class="user-dropdown">
                 <div class="user-info-display" onclick="toggleUserMenu()">
@@ -138,7 +140,7 @@
             <audio id="incorrectSound">
                 <source src="incorrect.mp3" type="audio/mpeg">
             </audio>
-            
+
             <div class="quiz-container">
                 <div class="quiz-header">
                     <div class="quiz-timer">
@@ -158,22 +160,23 @@
                         </div>
                     </div>
                     <div class="quiz-settings">
-                        <button id="audioSettingsBtn" class="settings-btn" onclick="toggleAudioSettings()" title="Cài đặt âm thanh">
+                        <button id="audioSettingsBtn" class="settings-btn" onclick="toggleAudioSettings()"
+                            title="Cài đặt âm thanh">
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="quiz-content">
                     <div class="question-card">
                         <div class="question-header">
-                            <h3 id="questionText">Câu hỏi sẽ hiển thị ở đây...</h3>
+                            <h3 id="questionDisplay">Câu hỏi sẽ hiển thị ở đây...</h3>
                         </div>
-                        
+
                         <div class="question-options" id="questionOptions">
                             <!-- Options will be loaded here -->
                         </div>
-                        
+
                         <div class="question-actions">
                             <button id="nextQuestionBtn" class="btn-primary" onclick="nextQuestion()" disabled>
                                 <i class="fas fa-arrow-right"></i> Tiếp theo
@@ -194,7 +197,7 @@
                     <h2 id="waitingClassName">Phòng chờ - [Class Name]</h2>
                     <div class="waiting-status" id="waitingStatus">Đang chờ giáo viên...</div>
                 </div>
-                
+
                 <div class="participants-section">
                     <div class="participants-header">
                         <h3><i class="fas fa-users"></i> Danh sách tham gia (<span id="participantCount">0</span>)</h3>
@@ -207,7 +210,7 @@
                         <!-- Participants will be loaded here -->
                     </div>
                 </div>
-                
+
                 <div class="quiz-info-section" id="quizInfoSection" style="display:none">
                     <h3><i class="fas fa-clipboard-list"></i> Thông tin bộ đề</h3>
                     <div class="quiz-info-card">
@@ -215,13 +218,14 @@
                             <h4 id="quizSetDisplayName">Tên bộ đề</h4>
                             <p id="quizSetDisplayDescription">Mô tả bộ đề</p>
                             <div class="quiz-stats">
-                                <span><i class="fas fa-question-circle"></i> <span id="questionCount">0</span> câu hỏi</span>
+                                <span><i class="fas fa-question-circle"></i> <span id="questionCount">0</span> câu
+                                    hỏi</span>
                                 <span><i class="fas fa-clock"></i> <span id="timeLimit">0</span> phút</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
 
@@ -374,7 +378,7 @@
                         <button class="tab-button active" onclick="switchBuilderTab('create')">Tạo câu hỏi mới</button>
                         <button class="tab-button" onclick="switchBuilderTab('manage')">Danh sách câu hỏi</button>
                     </div>
-                    
+
                     <!-- Create Question Tab -->
                     <div id="createQuestionTab" class="tab-content active">
                         <form id="questionForm" class="builder-form">
@@ -393,7 +397,7 @@
                                 <label>Chủ đề:</label>
                                 <input type="text" id="questionCategory" placeholder="Ví dụ: Web, Database, Network">
                             </div>
-                            
+
                             <!-- True/False options -->
                             <div id="tf-options" class="form-group">
                                 <label>Đáp án:</label>
@@ -402,7 +406,7 @@
                                     <option value="false">Sai</option>
                                 </select>
                             </div>
-                            
+
                             <!-- Multiple choice options -->
                             <div id="mcq-options" class="form-group" style="display:none">
                                 <label>Lựa chọn A:</label>
@@ -421,7 +425,7 @@
                                     <option value="3">D</option>
                                 </select>
                             </div>
-                            
+
                             <div class="form-actions">
                                 <button type="submit" class="btn-primary btn-full">
                                     <i class="fas fa-plus"></i>
@@ -431,12 +435,13 @@
                         </form>
                         <div id="questionError" class="error" style="display:none"></div>
                     </div>
-                    
+
                     <!-- Manage Questions Tab -->
                     <div id="manageQuestionsTab" class="tab-content">
                         <div class="manage-questions-header">
                             <div class="search-section">
-                                <input type="text" id="builderQuestionSearch" placeholder="Tìm kiếm câu hỏi..." onkeyup="filterBuilderQuestions()">
+                                <input type="text" id="builderQuestionSearch" placeholder="Tìm kiếm câu hỏi..."
+                                    onkeyup="filterBuilderQuestions()">
                                 <select id="builderQuestionCategory" onchange="filterBuilderQuestions()">
                                     <option value="">Tất cả chủ đề</option>
                                 </select>
@@ -446,7 +451,7 @@
                                 Làm mới
                             </button>
                         </div>
-                        
+
                         <div class="manage-questions-list" id="builderQuestionsList">
                             <!-- Questions will be loaded here -->
                         </div>
@@ -464,12 +469,15 @@
                         <label>Ảnh đại diện:</label>
                         <div class="avatar-section">
                             <div class="current-avatar">
-                                <img id="currentAvatarDisplay" class="avatar-preview" src="" alt="Avatar" style="display:none;">
+                                <img id="currentAvatarDisplay" class="avatar-preview" src="" alt="Avatar"
+                                    style="display:none;">
                                 <span id="currentAvatarEmoji" class="avatar-preview">🐱</span>
                             </div>
                             <div class="avatar-upload">
-                                <input type="file" id="avatarUpload" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
-                                <button type="button" class="btn-secondary" onclick="document.getElementById('avatarUpload').click()">
+                                <input type="file" id="avatarUpload" accept="image/*" style="display:none;"
+                                    onchange="handleAvatarUpload(event)">
+                                <button type="button" class="btn-secondary"
+                                    onclick="document.getElementById('avatarUpload').click()">
                                     <i class="fas fa-upload"></i> Tải ảnh lên
                                 </button>
                                 <button type="button" class="btn-secondary" onclick="clearAvatar()">
@@ -568,7 +576,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div id="classesList" class="classes-list">
                         <!-- Classes will be loaded here -->
                         <div class="empty-state">
@@ -685,8 +693,10 @@
                     <!-- Participants control will be loaded here -->
                 </div>
                 <div id="sessionActions">
-                    <button id="startSessionBtn" onclick="startQuizSession()" class="btn-primary" disabled>Bắt đầu bài thi</button>
-                    <button id="endSessionBtn" onclick="endQuizSession()" class="btn-secondary" style="display:none">Kết thúc phiên</button>
+                    <button id="startSessionBtn" onclick="startQuizSession()" class="btn-primary" disabled>Bắt đầu bài
+                        thi</button>
+                    <button id="endSessionBtn" onclick="endQuizSession()" class="btn-secondary" style="display:none">Kết
+                        thúc phiên</button>
                 </div>
             </div>
         </div>
@@ -778,7 +788,8 @@
                             <i class="fas fa-info-circle"></i>
                             Mô tả lớp học
                         </label>
-                        <textarea id="editClassDescription" placeholder="Mô tả về môn học, nội dung, yêu cầu..."></textarea>
+                        <textarea id="editClassDescription"
+                            placeholder="Mô tả về môn học, nội dung, yêu cầu..."></textarea>
                         <small class="form-hint">Mô tả giúp học sinh hiểu rõ về lớp học</small>
                     </div>
                     <div class="form-actions">
@@ -853,7 +864,8 @@
                                     <p>Quản lý và tổ chức các bộ đề kiểm tra</p>
                                 </div>
                             </div>
-                            <button class="btn-create-quizset modern-btn" onclick="showCreateQuizSetModal(window.currentClassId)">
+                            <button class="btn-create-quizset modern-btn"
+                                onclick="showCreateQuizSetModal(window.currentClassId)">
                                 <i class="fas fa-plus"></i>
                                 <span>Tạo bộ đề mới</span>
                             </button>
@@ -875,7 +887,7 @@
                                     <option value="">-- Chọn bộ đề --</option>
                                 </select>
                             </div>
-                            
+
                             <div id="quizSetInfo" class="quiz-info-section" style="display:none">
                                 <div class="quiz-info-cards">
                                     <div class="quiz-info-card">
@@ -887,7 +899,7 @@
                                             <span id="selectedQuestionCount" class="quiz-info-value">0</span>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="quiz-info-card">
                                         <div class="quiz-info-icon">
                                             <i class="fas fa-clock"></i>
@@ -895,12 +907,13 @@
                                         <div class="quiz-info-details">
                                             <span class="quiz-info-label">Thời gian tổng</span>
                                             <div class="quiz-time-input">
-                                                <input type="number" id="totalTimeMinutes" min="1" max="120" value="30" class="time-input">
+                                                <input type="number" id="totalTimeMinutes" min="1" max="120" value="30"
+                                                    class="time-input">
                                                 <span class="time-unit">phút</span>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="quiz-info-card">
                                         <div class="quiz-info-icon">
                                             <i class="fas fa-stopwatch"></i>
@@ -908,25 +921,27 @@
                                         <div class="quiz-info-details">
                                             <span class="quiz-info-label">Thời gian mỗi câu</span>
                                             <div class="quiz-time-input">
-                                                <input type="number" id="timePerQuestionSeconds" min="10" max="600" value="120" class="time-input">
+                                                <input type="number" id="timePerQuestionSeconds" min="10" max="600"
+                                                    value="120" class="time-input">
                                                 <span class="time-unit">giây</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="quiz-action-section">
                                 <button id="startQuizBtn" class="quiz-start-btn" onclick="startQuizWithSet()" disabled>
                                     <i class="fas fa-play"></i>
                                     <span>Bắt đầu làm bài</span>
                                 </button>
-                                <button id="stopQuizBtn" class="quiz-stop-btn" onclick="stopQuiz()" style="display:none">
+                                <button id="stopQuizBtn" class="quiz-stop-btn" onclick="stopQuiz()"
+                                    style="display:none">
                                     <i class="fas fa-stop"></i>
                                     <span>Dừng bài thi</span>
                                 </button>
                             </div>
-                            
+
                             <div id="quizStatus" class="quiz-status-section">
                                 <div class="quiz-status-content">
                                     <i class="fas fa-info-circle"></i>
@@ -1010,7 +1025,7 @@
             <div class="modal-body modern-body">
                 <form id="createQuizSetForm" class="modern-form">
                     <input type="hidden" id="quizSetClassId">
-                    
+
                     <!-- Basic Info Section -->
                     <div class="form-section">
                         <div class="section-header">
@@ -1029,10 +1044,11 @@
                                     </div>
                                 </div>
                                 <div class="info-card-content">
-                                    <input type="text" id="quizSetName" class="modern-input" placeholder="Ví dụ: Kiểm tra giữa kỳ - Chương 1" required>
+                                    <input type="text" id="quizSetName" class="modern-input"
+                                        placeholder="Ví dụ: Kiểm tra giữa kỳ - Chương 1" required>
                                 </div>
                             </div>
-                            
+
                             <div class="info-card">
                                 <div class="info-card-header">
                                     <div class="info-icon">
@@ -1044,12 +1060,13 @@
                                     </div>
                                 </div>
                                 <div class="info-card-content">
-                                    <textarea id="quizSetDescription" class="modern-textarea" placeholder="Mô tả về nội dung, thời gian, yêu cầu..."></textarea>
+                                    <textarea id="quizSetDescription" class="modern-textarea"
+                                        placeholder="Mô tả về nội dung, thời gian, yêu cầu..."></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Question Mode Section -->
                     <div class="form-section">
                         <div class="section-header">
@@ -1058,7 +1075,8 @@
                         </div>
                         <div class="mode-selector">
                             <div class="mode-option" data-mode="manual">
-                                <input type="radio" name="questionMode" value="manual" id="modeManual" checked onchange="toggleQuestionMode()">
+                                <input type="radio" name="questionMode" value="manual" id="modeManual" checked
+                                    onchange="toggleQuestionMode()">
                                 <label for="modeManual" class="mode-card">
                                     <div class="mode-icon">
                                         <i class="fas fa-hand-pointer"></i>
@@ -1071,7 +1089,8 @@
                                 </label>
                             </div>
                             <div class="mode-option" data-mode="random">
-                                <input type="radio" name="questionMode" value="random" id="modeRandom" onchange="toggleQuestionMode()">
+                                <input type="radio" name="questionMode" value="random" id="modeRandom"
+                                    onchange="toggleQuestionMode()">
                                 <label for="modeRandom" class="mode-card">
                                     <div class="mode-icon">
                                         <i class="fas fa-dice"></i>
@@ -1085,7 +1104,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Random Settings Section -->
                     <div id="randomSettings" class="form-section" style="display:none">
                         <div class="section-header">
@@ -1105,7 +1124,8 @@
                                 </div>
                                 <div class="settings-card-content">
                                     <div class="input-with-button">
-                                        <input type="number" id="randomQuestionCount" class="modern-input" min="1" max="50" value="10" placeholder="Nhập số câu hỏi">
+                                        <input type="number" id="randomQuestionCount" class="modern-input" min="1"
+                                            max="50" value="10" placeholder="Nhập số câu hỏi">
                                         <button type="button" class="input-btn" onclick="updateRandomCount()">
                                             <i class="fas fa-sync"></i>
                                         </button>
@@ -1114,7 +1134,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Action Buttons -->
                     <div class="form-actions modern-actions">
                         <button type="button" class="btn-modern btn-cancel" onclick="closeCreateQuizSetModal()">
@@ -1143,11 +1163,12 @@
                     <button class="tab-button active" onclick="switchTab('existing')">Câu hỏi có sẵn</button>
                     <button class="tab-button" onclick="switchTab('random')">Chọn ngẫu nhiên</button>
                 </div>
-                
+
                 <!-- Existing Questions Tab -->
                 <div id="existingQuestionsTab" class="tab-content active">
                     <div class="search-section">
-                        <input type="text" id="questionSearch" placeholder="Tìm kiếm câu hỏi..." onkeyup="filterQuestions()">
+                        <input type="text" id="questionSearch" placeholder="Tìm kiếm câu hỏi..."
+                            onkeyup="filterQuestions()">
                         <select id="categoryFilter" onchange="filterQuestions()">
                             <option value="">Tất cả chủ đề</option>
                         </select>
@@ -1162,7 +1183,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Random Questions Tab -->
                 <div id="randomQuestionsTab" class="tab-content">
                     <div class="random-settings">
@@ -1171,10 +1192,11 @@
                                 <i class="fas fa-dice"></i>
                                 Số câu hỏi ngẫu nhiên
                             </label>
-                            <input type="number" id="randomCount" min="1" max="50" value="5" placeholder="Nhập số câu hỏi">
+                            <input type="number" id="randomCount" min="1" max="50" value="5"
+                                placeholder="Nhập số câu hỏi">
                             <small class="form-hint">Số câu hỏi sẽ được chọn ngẫu nhiên từ tất cả câu hỏi có sẵn</small>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="randomCategory">
                                 <i class="fas fa-filter"></i>
@@ -1185,7 +1207,7 @@
                             </select>
                             <small class="form-hint">Để trống để chọn từ tất cả câu hỏi</small>
                         </div>
-                        
+
                         <div class="random-preview" id="randomPreview" style="display:none">
                             <h4><i class="fas fa-eye"></i> Xem trước câu hỏi sẽ được chọn:</h4>
                             <div id="previewQuestions" class="preview-questions">
@@ -1193,7 +1215,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="modal-actions">
                         <button type="button" class="btn-secondary" onclick="closeAddQuestionsModal()">Hủy</button>
                         <button type="button" class="btn-secondary" onclick="previewRandomQuestions()">
@@ -1204,7 +1226,7 @@
                         </button>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -1228,7 +1250,7 @@
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
-                    
+
                     <div class="audio-setting-item">
                         <div class="setting-info">
                             <h4><i class="fas fa-check-circle"></i> Âm thanh đúng</h4>
@@ -1239,7 +1261,7 @@
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
-                    
+
                     <div class="audio-setting-item">
                         <div class="setting-info">
                             <h4><i class="fas fa-times-circle"></i> Âm thanh sai</h4>
@@ -1269,4 +1291,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

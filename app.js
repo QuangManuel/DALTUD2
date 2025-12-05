@@ -1,8 +1,7 @@
 // Cấu hình Supabase - Version 3.0 - Fixed URL
-const SUPABASE_URL = 'https://wbmlhpgdxucjaljbfcjw.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibWxocGdkeHVjamFsamJmY2p3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3NzAwMjEsImV4cCI6MjA3NTM0NjAyMX0.A65069cge1AlFqTpkAvS7JrbeSJqUhtUuAd5eSItde8';
+const SUPABASE_URL = 'https://qvrawnurfmxdsjttlele.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2cmF3bnVyZm14ZHNqdHRsZWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MjEwNzMsImV4cCI6MjA3NDM5NzA3M30.dyDgXVTCvNwbvj1PsbVMaOnAea2NgVruuNnEpMfcj2w';
 
-// Supabase configuration loaded
 
 // Khởi tạo Supabase client
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -18,22 +17,20 @@ let currentSettings = {
 let questions = [];
 let currentQuiz = null;
 
-// Teacher verification codes removed - teachers are now created by admin
-
 // Khởi tạo ứng dụng
 document.addEventListener('DOMContentLoaded', function() {
-    // Initializing app
+    // Khởi tạo ứng dụng
     loadSettings();
     loadQuestions();
     checkAuth();
     setupEventListeners();
     
-    // Set active link for home page on initial load
+    // Đặt link hoạt động cho trang chủ trên load đầu tiên
     setActiveNavLink('home');
     
-    // Force update UI after a short delay to ensure everything is loaded
+    // Force cập nhật giao diện sau một khoảng thời gian ngắn để đảm bảo tất cả đã được load
     setTimeout(() => {
-        // Force updating UI after delay
+        // Force cập nhật giao diện sau khoảng thời gian ngắn
         updateUI();
     }, 100);
 });
@@ -51,7 +48,7 @@ async function checkAuth() {
 
 // Cập nhật giao diện dựa trên trạng thái đăng nhập
 function updateUI() {
-    // Updating UI based on user state
+    // Cập nhật giao diện dựa trên trạng thái đăng nhập
     
     const loginLink = document.getElementById('loginLink');
     const registerLink = document.getElementById('registerLink');
@@ -64,8 +61,7 @@ function updateUI() {
     const userName = document.getElementById('userName');
     const userRole = document.getElementById('userRole');
     
-    // User dropdown element found
-    // Check user dropdown display state
+    // Kiểm tra trạng thái hiển thị dropdown user
 
     if (currentUser) {
         // Đã đăng nhập
@@ -708,8 +704,7 @@ async function handleLogin(e) {
         // Load profile để lấy thông tin user
         await getUserProfile();
         
-        // Redirect sẽ được xử lý sau khi load profile
-        showPage('home'); // Tạm thời vào trang chủ
+        showPage('home');
         
         showSuccess('Đăng nhập thành công!');
         
@@ -737,14 +732,33 @@ async function handleRegister(e) {
                     username: username,
                     full_name: fullName,
                     role: role
-                }
+                },
+                emailRedirectTo: window.location.origin
             }
         });
         
         if (error) throw error;
         
-        showSuccess('Đăng ký học sinh thành công! Vui lòng kiểm tra email để xác thực tài khoản.');
-        showPage('login');
+        // Tự động đăng nhập sau khi đăng ký (bỏ qua xác thực email)
+        if (data.user) {
+            const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+            
+            if (loginError) {
+                // Nếu không đăng nhập được (do cần xác thực email), hiển thị thông báo
+                showSuccess('Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.');
+                showPage('login');
+            } else {
+                // Đăng nhập thành công
+                currentUser = loginData.user;
+                updateUI();
+                await getUserProfile();
+                showPage('home');
+                showSuccess('Đăng ký và đăng nhập thành công!');
+            }
+        }
         
     } catch (error) {
         showError('registerError', error.message);
@@ -1714,7 +1728,7 @@ async function handleCreateClass(e) {
             return;
         }
         
-        // Generate unique class code
+        // Tạo lớp học mới
         const classCode = generateClassCode();
         
         const { data, error } = await supabase
@@ -1841,23 +1855,32 @@ function updateRandomCount() {
 async function getRandomQuestions(count) {
     try {
         const { data: { user } } = await supabase.auth.getUser();
+        console.log('=== getRandomQuestions DEBUG ===');
+        console.log('user:', user?.id);
+        console.log('count requested:', count);
+        
         if (!user) {
             showError('Bạn cần đăng nhập để lấy câu hỏi');
             return [];
         }
         
-        // Get all questions created by current user
+        // Get all questions (not just current user's)
         const { data: questions, error } = await supabase
             .from('questions')
-            .select('id')
-            .eq('created_by', user.id);
+            .select('id');
+        
+        console.log('questions from DB:', questions);
+        console.log('error:', error);
         
         if (error) throw error;
         
         if (!questions || questions.length === 0) {
+            console.log('No questions found!');
             showError('Không có câu hỏi nào để chọn ngẫu nhiên. Vui lòng tạo câu hỏi trước.');
             return [];
         }
+        
+        console.log('Found', questions.length, 'questions');
         
         if (questions.length < count) {
             showError(`Chỉ có ${questions.length} câu hỏi, không đủ để chọn ${count} câu. Sẽ chọn tất cả ${questions.length} câu.`);
@@ -1912,15 +1935,44 @@ async function handleCreateQuizSet(e) {
                 return;
             }
             
-            // Get random questions
-            questionIds = await getRandomQuestions(randomCount);
+            // Get random questions - inline để tránh lỗi
+            console.log('Getting random questions, count:', randomCount);
+            const { data: allQuestions, error: qError } = await supabase
+                .from('questions')
+                .select('id');
+            
+            console.log('All questions from DB:', allQuestions);
+            console.log('Query error:', qError);
+            
+            if (qError) {
+                showError('Lỗi khi lấy câu hỏi: ' + qError.message);
+                return;
+            }
+            
+            if (!allQuestions || allQuestions.length === 0) {
+                showError('Không có câu hỏi nào trong hệ thống. Vui lòng tạo câu hỏi trước.');
+                return;
+            }
+            
+            // Shuffle and pick random
+            const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+            questionIds = shuffled.slice(0, Math.min(randomCount, shuffled.length)).map(q => q.id);
+            
+            console.log('Selected question IDs:', questionIds);
+            
             if (questionIds.length === 0) {
-                return; // Error already shown in getRandomQuestions
+                showError('Không thể chọn câu hỏi ngẫu nhiên');
+                return;
+            }
+            
+            if (questionIds.length < randomCount) {
+                showSuccess(`Chỉ có ${questionIds.length} câu hỏi, đã chọn tất cả.`);
             }
         }
         
         // Prepare insert data
         const insertData = {
+            name: quizSetName.trim(),
             title: quizSetName.trim(),
             description: quizSetDescription.trim() || null,
             class_id: classId,
@@ -2349,11 +2401,12 @@ function toggleNewQuestionType() {
 async function handleNewQuestion(e) {
     e.preventDefault();
     
-    const questionText = document.getElementById('newQuestionText').value;
-    const category = document.getElementById('newQuestionCategory').value;
-    const questionType = document.getElementById('newQuestionType').value;
+    // Thử lấy từ form mới (newQuestionForm) trước, nếu không có thì lấy từ form cũ (questionForm)
+    const questionText = document.getElementById('newQuestionText')?.value || document.getElementById('questionText')?.value;
+    const category = document.getElementById('newQuestionCategory')?.value || document.getElementById('questionCategory')?.value;
+    const questionType = document.getElementById('newQuestionType')?.value || document.getElementById('questionType')?.value;
     
-    if (!questionText.trim()) {
+    if (!questionText || !questionText.trim()) {
         showError('Vui lòng nhập nội dung câu hỏi');
         return;
     }
@@ -2369,12 +2422,12 @@ async function handleNewQuestion(e) {
         let options = null;
         
         if (questionType === 'tf') {
-            correctAnswer = document.getElementById('newTfAnswer').value;
+            correctAnswer = document.getElementById('newTfAnswer')?.value || document.getElementById('tfAnswer')?.value;
         } else {
-            const optionA = document.getElementById('newOptionA').value;
-            const optionB = document.getElementById('newOptionB').value;
-            const optionC = document.getElementById('newOptionC').value;
-            const optionD = document.getElementById('newOptionD').value;
+            const optionA = document.getElementById('newOptionA')?.value || document.getElementById('optionA')?.value;
+            const optionB = document.getElementById('newOptionB')?.value || document.getElementById('optionB')?.value;
+            const optionC = document.getElementById('newOptionC')?.value || document.getElementById('optionC')?.value;
+            const optionD = document.getElementById('newOptionD')?.value || document.getElementById('optionD')?.value;
             
             if (!optionA || !optionB || !optionC || !optionD) {
                 showError('Vui lòng nhập đầy đủ 4 lựa chọn');
@@ -2382,7 +2435,7 @@ async function handleNewQuestion(e) {
             }
             
             options = [optionA, optionB, optionC, optionD];
-            correctAnswer = document.getElementById('newCorrectAnswer').value;
+            correctAnswer = document.getElementById('newCorrectAnswer')?.value || document.getElementById('correctAnswer')?.value;
         }
         
         const { data: question, error } = await supabase
@@ -4372,7 +4425,7 @@ function showQuestion(index) {
     document.getElementById('progressFill').style.width = `${((index + 1) / currentQuizQuestions.length) * 100}%`;
     
     // Show question text
-    document.getElementById('questionText').textContent = question.text;
+    document.getElementById('questionDisplay').textContent = question.text;
     
     // Show options with new grid layout
     const optionsContainer = document.getElementById('questionOptions');

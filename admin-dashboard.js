@@ -1,8 +1,8 @@
 // Admin Dashboard JavaScript
 // Cấu hình Supabase - Corrected URL
-const SUPABASE_URL = 'https://wbmlhpgdxucjaljbfcjw.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibWxocGdkeHVjamFsamJmY2p3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3NzAwMjEsImV4cCI6MjA3NTM0NjAyMX0.A65069cge1AlFqTpkAvS7JrbeSJqUhtUuAd5eSItde8';
-const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndibWxocGdkeHVjamFsamJmY2p3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTc3MDAyMSwiZXhwIjoyMDc1MzQ2MDIxfQ.S2I8nLdDP5IfwEtbBue-ru8ALNTM-Ksm4gBKGgK8Txw';
+const SUPABASE_URL = 'https://qvrawnurfmxdsjttlele.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2cmF3bnVyZm14ZHNqdHRsZWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MjEwNzMsImV4cCI6MjA3NDM5NzA3M30.dyDgXVTCvNwbvj1PsbVMaOnAea2NgVruuNnEpMfcj2w';
+const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2cmF3bnVyZm14ZHNqdHRsZWxlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODgyMTA3MywiZXhwIjoyMDc0Mzk3MDczfQ.QQ29KD8H-q55L7r7fRaxWNSTQP-771Ug7yU7TBoWjB0';
 
 console.log('=== ADMIN DASHBOARD SUPABASE CONFIG ===');
 console.log('URL:', SUPABASE_URL);

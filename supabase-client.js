@@ -1,14 +1,12 @@
-// Supabase client setup and database operations
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2'
 
-// Initialize Supabase client
 const supabaseUrl = 'https://qvrawnurfmxdsjttlele.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2cmF3bnVyZm14ZHNqdHRsZWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MjEwNzMsImV4cCI6MjA3NDM5NzA3M30.dyDgXVTCvNwbvj1PsbVMaOnAea2NgVruuNnEpMfcj2w'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-// Authentication functions
+
 export const auth = {
-  // Sign up new user
+  // Đăng ký
   async signUp(email, password, userData) {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -25,7 +23,7 @@ export const auth = {
     return { data, error }
   },
 
-  // Sign in user
+  // Đăng nhập
   async signIn(email, password) {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -34,27 +32,27 @@ export const auth = {
     return { data, error }
   },
 
-  // Sign out user
+  // Đăng xuất
   async signOut() {
     const { error } = await supabase.auth.signOut()
     return { error }
   },
 
-  // Get current user
+  // Lấy thông tin user hiện tại
   async getCurrentUser() {
     const { data: { user } } = await supabase.auth.getUser()
     return user
   },
 
-  // Listen to auth changes
+  // Lắng nghe thay đổi trạng thái đăng nhập
   onAuthStateChange(callback) {
     return supabase.auth.onAuthStateChange(callback)
   }
 }
 
-// Profile functions
+// Hàm liên quan đến profile
 export const profiles = {
-  // Get user profile
+  // Lấy thông tin profile của user
   async getProfile(userId) {
     const { data, error } = await supabase
       .from('profiles')
@@ -64,7 +62,7 @@ export const profiles = {
     return { data, error }
   },
 
-  // Update user profile
+  // Cập nhật thông tin profile của user
   async updateProfile(userId, updates) {
     const { data, error } = await supabase
       .from('profiles')
@@ -79,9 +77,9 @@ export const profiles = {
   }
 }
 
-// Questions functions
+// Hàm liên quan đến câu hỏi
 export const questions = {
-  // Get all questions
+  // Lấy tất cả câu hỏi
   async getAll() {
     const { data, error } = await supabase
       .from('questions')
@@ -90,7 +88,7 @@ export const questions = {
     return { data, error }
   },
 
-  // Get questions by category
+  // Lấy câu hỏi theo danh mục
   async getByCategory(category) {
     const { data, error } = await supabase
       .from('questions')
@@ -100,7 +98,7 @@ export const questions = {
     return { data, error }
   },
 
-  // Get random questions for quiz
+  // Lấy câu hỏi ngẫu nhiên cho quiz
   async getRandomQuestions(count) {
     const { data, error } = await supabase
       .from('questions')
@@ -110,7 +108,7 @@ export const questions = {
     return { data, error }
   },
 
-  // Create new question
+  // Tạo câu hỏi mới
   async create(questionData) {
     const { data, error } = await supabase
       .from('questions')
@@ -120,7 +118,7 @@ export const questions = {
     return { data, error }
   },
 
-  // Update question
+  // Cập nhật câu hỏi
   async update(questionId, updates) {
     const { data, error } = await supabase
       .from('questions')
@@ -134,7 +132,7 @@ export const questions = {
     return { data, error }
   },
 
-  // Delete question
+  // Xóa câu hỏi
   async delete(questionId) {
     const { error } = await supabase
       .from('questions')
@@ -144,5 +142,5 @@ export const questions = {
   }
 }
 
-// Export supabase client for direct use if needed
+// Xuất supabase client để sử dụng trực tiếp nếu cần
 export { supabase }
